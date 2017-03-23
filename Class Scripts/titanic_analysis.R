@@ -19,8 +19,8 @@ library(dplyr)
 
 
 # Load titanic data
-train <- read.csv("train.csv", header = TRUE)
-test <- read.csv("test.csv", header = TRUE)
+train <- read.csv("datasets/train.csv", header = TRUE)
+test <- read.csv("datasets/test.csv", header = TRUE)
 
 
 # Add a 'Survived' variable to the test set to allow for combining data sets
@@ -89,7 +89,7 @@ males[1:5,]
 
 
 
-# Add title variable
+# Add title variable--you can create a column just like that. Just specify. $Title
 data.combined$Title <- ifelse(grepl('Mr. ',data.combined$Name),'Mr',ifelse(grepl('Mrs. ',data.combined$Name),'Mrs',ifelse(grepl('Miss.',data.combined$Name),'Miss', ifelse(grepl('Master.', data.combined$Name),'Master','Other'))))
 data.combined$Title <- as.factor(data.combined$Title)
 
@@ -102,7 +102,7 @@ View(data.combined)
 ggplot(data.combined[1:891,], aes(x = Title, fill = Survived)) +
   geom_bar() +
   facet_wrap(~Pclass) + 
-  ggtitle("Pclass") +
+  ggtitle("Passenger Class") +
   xlab("Title") +
   ylab("Total Count") +
   labs(fill = "Survived")
@@ -149,7 +149,7 @@ summary(data.combined$SibSp)
 
 
 
-# Can we treat as a factor?
+# Can we treat as a factor? How does this tell you?
 length(unique(data.combined$SibSp))
 
 data.combined$SibSp <- as.factor(data.combined$SibSp)
@@ -188,10 +188,7 @@ temp.parch <- c(train$Parch, test$Parch)
 
 
 # Alright! See if you can create a factor variable to calculate the family size (Family.Size) using the above variables
-
-
-
-
+data.combined$Family.Size <- temp.sibsp + temp.parch
 
 
 View(data.combined)
