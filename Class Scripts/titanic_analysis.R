@@ -188,7 +188,7 @@ temp.parch <- c(train$Parch, test$Parch)
 
 
 # Alright! See if you can create a factor variable to calculate the family size (Family.Size) using the above variables
-data.combined$Family.Size <- temp.sibsp + temp.parch
+data.combined$Family.Size <- as.factor(temp.sibsp + temp.parch + 1)
 
 
 View(data.combined)
@@ -251,7 +251,7 @@ test.submit <- data.combined[892:1309, c("Title", "Pclass", "Family.Size", "Age"
 rpart1.prediction <- predict(rpart1, test.submit, type = "class")
 table(rpart1.prediction)
 rpart1.submit <- data.frame(PassengerId = rep(892:1309), Survived = rpart1.prediction)
-write.csv(rpart1.submit, file = "rpart1.csv", row.names = FALSE)
+write.csv(rpart1.submit, file = "datasets/rpart1.csv", row.names = FALSE)
 
 
 # Scored 76.55 (not great)
@@ -324,8 +324,12 @@ varImpPlot(rf.6)
 
 
 # See if you can reduce error using a different combination of variables
+rf.model.6.1 <- data.combined[1:891, c("Pclass", "Title", "Sex", "Family.Size")]
 
-
+set.seed(123)
+rf.6.1 <- randomForest(x = rf.model.6.1, y = rf.label, importance = TRUE, ntree = 1000)
+rf.6.1
+varImpPlot(rf.6.1)
 
 
 
@@ -383,7 +387,7 @@ library(e1071)
 # Create dataset for rows with Survived values
 newTrain <- data.combined[1:891,]
 
-
+set.seed(123)
 # Split data 70% train 30% validate
 splitTrain <- createDataPartition(newTrain$Survived, p = .7, list = FALSE)
 
